@@ -114,13 +114,17 @@ public class SimpleMazeGame
 		return rooms;
 	}
 
-	private static void parseRoomWall(String s, Room room, ArrayList<Door> doors, Direction direction) {
-		if(s.charAt(0) != 'd') {
+	private static void parseRoomWall(String s, Room room, ArrayList<Door> doors, Direction direction, ArrayList<Room> rooms) {
+		if (s.equals("wall")) {
 			room.setSide(direction, new Wall());
-		} else {
+		} else if (s.charAt(0) == 'd') {
 			int doorNum = Integer.parseInt(s.substring(1));
-			System.out.println("Added door between " + Integer.toString(room.getNumber()) + " and " + Integer.toString(doors.get(doorNum).getOtherSide(room).getNumber()));
 			room.setSide(direction, doors.get(doorNum));
+		} else {
+			int otherRoomNum = Integer.parseInt(s);
+			Door door = new Door(room, rooms.get(otherRoomNum));
+			door.setOpen(true);
+			room.setSide(direction, door);
 		}
 	}
 
@@ -128,10 +132,10 @@ public class SimpleMazeGame
 		for(int i = 0; i < rooms.size(); i++) {
 			Room room = rooms.get(i);
 			String[] roomString = fileData.get(i).split(" ");
-			parseRoomWall(roomString[2], room, doors, Direction.North);
-            parseRoomWall(roomString[3], room, doors, Direction.South);
-			parseRoomWall(roomString[4], room, doors, Direction.East);
-			parseRoomWall(roomString[5], room, doors, Direction.West);
+			parseRoomWall(roomString[2], room, doors, Direction.North, rooms);
+			parseRoomWall(roomString[3], room, doors, Direction.South, rooms);
+			parseRoomWall(roomString[4], room, doors, Direction.East, rooms);
+			parseRoomWall(roomString[5], room, doors, Direction.West, rooms);
 			rooms.set(i, room);
 		}
 		return rooms;
