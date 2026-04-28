@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class MazeGameDriver {
 
-    static String filePath;
+    static String filePath = "large.maze";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
