@@ -7,17 +7,21 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class MazeGameCreator {
+public class MazeGameCreator {
 
-    void main(String[] args) {
+    public static void main(String[] args) {
         String filePath = "large.maze";
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose maze type: red or blue?");
+        System.out.println("Choose maze type: basic, red, or blue?");
         String choice = scanner.nextLine().trim().toLowerCase();
 
-        MazeGameCreator factory = choice.equals("red") ? new RedMazeGameCreator() : new BlueMazeGameCreator();
-
-        Maze maze = loadMaze(filePath);
+        // My first time using a "new switch" method
+        MazeGameCreator factory = switch (choice) {
+            case "red" -> new RedMazeGameCreator();
+            case "blue" -> new BlueMazeGameCreator();
+            default -> new MazeGameCreator();
+        };
+        Maze maze = factory.loadMaze(filePath);
         MazeViewer viewer = new MazeViewer(maze);
         viewer.run();
     }
