@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class MazeFactory {
+public abstract class MazeGameCreator {
 
     public Maze createMaze() {
         return new Maze();
@@ -47,11 +47,11 @@ public abstract class MazeFactory {
         return maze;
     }
 
-    public abstract Wall makeWall();
+    public Wall makeWall() { return new Wall(); }
 
-    public abstract Door makeDoor(Room r1, Room r2);
+    public Door makeDoor(Room r1, Room r2) { return new Door(r1, r2); }
 
-    public abstract Room makeRoom(int roomNum);
+    public Room makeRoom(int roomNum) { return new Room(roomNum); }
 
     // HELPERS:
     private ArrayList<String> readFile(final String filename) {
