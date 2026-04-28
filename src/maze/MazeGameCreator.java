@@ -1,5 +1,7 @@
 package maze;
 
+import maze.ui.MazeViewer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,12 +9,25 @@ import java.util.Scanner;
 
 public abstract class MazeGameCreator {
 
+    void main(String[] args) {
+        String filePath = "large.maze";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose maze type: red or blue?");
+        String choice = scanner.nextLine().trim().toLowerCase();
+
+        MazeGameCreator factory = choice.equals("red") ? new RedMazeGameCreator() : new BlueMazeGameCreator();
+
+        Maze maze = loadMaze(filePath);
+        MazeViewer viewer = new MazeViewer(maze);
+        viewer.run();
+    }
+
     public Maze createMaze() {
         return new Maze();
     }
 
     public Maze loadMaze(String path) {
-        Maze maze = new Maze();
+        Maze maze = createMaze();
         ArrayList<String> fileData = readFile(path);
         int numRooms = getNumRooms(fileData);
 
