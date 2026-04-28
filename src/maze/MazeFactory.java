@@ -1,14 +1,14 @@
 package maze;
 
+import java.util.ArrayList;
+
 public abstract class MazeFactory {
 
     public Maze createMaze() {
-        // TODO
-        return null;
+        return new Maze();
     }
 
     public Maze loadMaze(String path) {
-        // TODO
         return null;
     }
 
