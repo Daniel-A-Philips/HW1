@@ -78,7 +78,7 @@ public class SimpleMazeGame
 	}
 
 	private static ArrayList<String> readFile(final String filename) {
-		ArrayList<String> commands = new ArrayList<String>();
+		ArrayList<String> commands = new ArrayList<>();
 		File file = new File(filename);
 
 		try (Scanner scanner = new Scanner(file)) {
@@ -86,10 +86,9 @@ public class SimpleMazeGame
 				String data = scanner.nextLine();
 				if(data.isEmpty()) continue;
 				commands.add(data);
-				System.out.println(data);
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("An error occurred.");
+			System.out.println("An error occurred during the reading of " + filename);
 			e.printStackTrace();
 		}
 
@@ -106,7 +105,7 @@ public class SimpleMazeGame
 	}
 
 	private static ArrayList<Room> createRooms(int numRooms) {
-		ArrayList<Room> rooms = new ArrayList<Room>();
+		ArrayList<Room> rooms = new ArrayList<>();
 		for(int i = 0; i < numRooms; i++) {
 			Room room = new Room(i);
 			rooms.add(room);
@@ -120,7 +119,7 @@ public class SimpleMazeGame
 		} else if (s.charAt(0) == 'd') {
 			int doorNum = Integer.parseInt(s.substring(1));
 			room.setSide(direction, doors.get(doorNum));
-		} else {
+		} else { // This is where I got the error, I forgot to check for open doors!
 			int otherRoomNum = Integer.parseInt(s);
 			Door door = new Door(room, rooms.get(otherRoomNum));
 			door.setOpen(true);
@@ -128,7 +127,7 @@ public class SimpleMazeGame
 		}
 	}
 
-	private static ArrayList<Room> parseWalls(ArrayList<String> fileData, ArrayList<Room> rooms, ArrayList<Door> doors) {
+	private static void parseWalls(ArrayList<String> fileData, ArrayList<Room> rooms, ArrayList<Door> doors) {
 		for(int i = 0; i < rooms.size(); i++) {
 			Room room = rooms.get(i);
 			String[] roomString = fileData.get(i).split(" ");
@@ -138,7 +137,6 @@ public class SimpleMazeGame
 			parseRoomWall(roomString[5], room, doors, Direction.West, rooms);
 			rooms.set(i, room);
 		}
-		return rooms;
 	}
 
 	private static ArrayList<Door> parseDoors(ArrayList<String> fileData, ArrayList<Room> rooms) {
@@ -166,12 +164,9 @@ public class SimpleMazeGame
 
 		ArrayList<Door> doors = parseDoors(fileData, rooms);
 
-        ArrayList<Room> newRooms = parseWalls(fileData, rooms, doors);
+        parseWalls(fileData, rooms, doors);
 
-
-        // U D R L
-
-        for (Room room : newRooms) {
+        for (Room room : rooms) {
             maze.addRoom(room);
 			System.out.println("Added Room " + Integer.toString(room.getNumber()) + " To Maze");
         }
@@ -183,12 +178,6 @@ public class SimpleMazeGame
 
 	public static void main(String[] args)
 	{
-		// Maze maze = createMaze();
-		// Input format:
-		//room 23 18 wall wall 22
-		//room 24 19 wall wall wall
-		//door d0 11 6 close
-		//door d1 12 17 close
 		Maze maze = loadMaze("large.maze");
 	    MazeViewer viewer = new MazeViewer(maze);
 	    viewer.run();
